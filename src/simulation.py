@@ -17,7 +17,8 @@ m = list(csv.reader(open('arena1.csv')))
 # Set up the drawing window
 GAME_W = (len(m[0])*px)*scale+50
 GAME_H = (len(m)*px)*scale+30
-screen = pygame.display.set_mode([GAME_W, GAME_H])
+STATS_H = 200
+screen = pygame.display.set_mode([GAME_W, GAME_H+STATS_H])
 clock = pygame.time.Clock()
 
 
@@ -33,12 +34,20 @@ from pygame.locals import (
     QUIT,
 )
 
-t_robot = Robot(2,20, 0, pixels+1, (0,255,0))
+t_robot = Robot(2,20, 0, m, pixels+1, (0,255,0))
+
+#draw everything
+def render():
+    drawGame()
+    drawStats()
+
+    # Flip the display
+    pygame.display.flip()
 
 
-#drawing screen functionality
-def draw():
-    # Fill the background with black
+#drawing screen for the game
+def drawGame():
+    # Fill the background with dark gray
     screen.fill((50, 50, 50))
 
     #fill grid
@@ -53,17 +62,21 @@ def draw():
     screen.blit(t_robot.surf, (t_robot.x*(pixels+1),t_robot.y*(pixels+1)))
 
 
-    # Flip the display
-    pygame.display.flip()
+# draw the stats at the bottom of the screen
+def drawStats():
+    # Fill the bottom part of the screen with black
+    pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(0,GAME_H,GAME_W,STATS_H))
+
+    font = pygame.font.SysFont(None, 24)
+    bluetxt = font.render('Blue Robot: ' + str((t_robot.x,t_robot.y)) + " @ " + str(t_robot.rot), True, (0,0,255))
+    screen.blit(bluetxt, (20, GAME_H+20))
 
 
-
-
-tick = 0
-
+###############        MAIN GAME LOOP        ####################
 
 # Run until the user asks to quit
 running = True
+tick = 0
 while running:
 
     # Did the user click the window close button?
@@ -78,11 +91,11 @@ while running:
     pressed_keys = pygame.key.get_pressed()
 
     #perform every tick
-    if tick % (pixels) == 0:
+    if tick % (5) == 0:
         t_robot.keypress(pressed_keys)
 
     #draw the screen
-    draw()
+    render()
 
     clock.tick(30)
     
