@@ -48,6 +48,7 @@ class Robot(pygame.sprite.Sprite):
 		self.control = control
 		self.path = []
 		self.target = None
+		self.mode = "random"
 
 		self.arena = arena
 		self.collisions = [1,2]
@@ -156,6 +157,25 @@ class Robot(pygame.sprite.Sprite):
 		return pos2
 
 
+	#check if bounding box is at the position
+	def atPos(self, target, pos=None):
+		#create position
+		if pos == None:
+			pos = pt(self.x,self.y)
+
+		for h in range(self.robotDim.y):
+			for w in range(self.robotDim.x):
+				nx = pos.x+w
+				ny = pos.y+h
+
+				p2 = pt(nx,ny)
+
+				if p2 == target:
+					return True
+				
+
+		return False
+
 
 
 	#######  PLAYER CONTROL METHODS   #######
@@ -219,7 +239,7 @@ class Robot(pygame.sprite.Sprite):
 			#add all valid points to queue if not already in it
 			for p in n:
 				#found destination
-				if p == t:
+				if p == t or self.atPos(t,p):
 					path = []
 					path.insert(0,p)
 					dest = origin
@@ -241,7 +261,7 @@ class Robot(pygame.sprite.Sprite):
 			dest = dest.parent
 
 		self.path = path
-		self.printPath()
+		#self.printPath()
 
 		return 1
 
@@ -258,6 +278,12 @@ class Robot(pygame.sprite.Sprite):
 				validPts.append(a)
 
 		return validPts
+
+
+
+	def touchingPt(self,p):
+		return
+
 
 
 	#ai moves to the point based on the path calculated
