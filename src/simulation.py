@@ -39,10 +39,10 @@ from pygame.locals import (
     QUIT,
 )
 
-b_robot1 = Robot(3,23, 0, m, pixels+1, (0,0,255),"player")
-b_robot2 = Robot(3,3, 0, m, pixels+1, (0,0,255),"ai")
-r_robot1 = Robot(43,3, 0, m, pixels+1, (255,0,0),"ai")
-r_robot2 = Robot(43,23, 0, m, pixels+1, (255,0,0),"ai")
+b_robot1 = Robot(1,3,23, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"player")
+b_robot2 = Robot(2,3,3, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"ai")
+r_robot1 = Robot(1,43,3, 0, m, [pt(43,3),pt(43,23)], pixels+1, (255,0,0),"ai")
+r_robot2 = Robot(2,43,23, 0, m, [pt(43,3),pt(43,23)], pixels+1, (255,0,0),"ai")
 
 all_robots = [b_robot1, b_robot2, r_robot1, r_robot2]
 #all_robots = [b_robot1,r_robot1]
@@ -78,8 +78,21 @@ def create_button(x, y, text, color, callback, active=False):
     return button
 
 #sets the mode of the robot from the button press
-def setRobotMode(rb, mode):
-    rb.mode = mode
+def setRobotMode(rid, color, mode):
+    rb = None
+    if rid == 8:
+        print('hmm')
+        return
+    if color == "red":
+        rb = red_robots[rid-1]
+    elif color == "blue":
+        rb = blue_robots[rid-1]
+
+    if rb == None:
+        return
+
+    print("Changing mode to [" + mode + "] for " +  color + " robot " + str(rid))
+    rb.modeChange(mode)
 
 #reset the colors of all of the buttons
 def resetBtns(b):
@@ -96,18 +109,13 @@ def resetBtns(b):
 # make the buttons for the UI
 robot_btns = []
 btn_sets = []
-h = 3
-for b in blue_robots:
+if blue_robots[0].control != "player":
     bs = []
-    if b.control == "player":
-        h+=4
-        continue
-
-    b_btn1 = create_button(20, GAME_H+(h*20), "Random", (32,32,181),(lambda: setRobotMode(b,"random")),True)
+    b_btn1 = create_button(20, GAME_H+(3*20), "Random", (32,32,181),(lambda: setRobotMode(1, "blue", "random")),True)
     robot_btns.append(b_btn1)
-    b_btn2 = create_button(90, GAME_H+(h*20), "Offense", (32,32,181),(lambda: setRobotMode(b,"offense")))
+    b_btn2 = create_button(90, GAME_H+(3*20), "Offense", (32,32,181),(lambda: setRobotMode(1, "blue", "offense")))
     robot_btns.append(b_btn2)
-    b_btn3 = create_button(160, GAME_H+(h*20), "Defense", (32,32,181),(lambda: setRobotMode(b,"defense")))
+    b_btn3 = create_button(160, GAME_H+(3*20), "Defense", (32,32,181),(lambda: setRobotMode(1, "blue", "defense")))
     robot_btns.append(b_btn3)
 
     bs.append(b_btn1)
@@ -115,48 +123,48 @@ for b in blue_robots:
     bs.append(b_btn3)
     btn_sets.append(bs)
 
-
-    h += 4
-
-h = 3
-for r in red_robots:
+if blue_robots[1].control != "player":
     bs = []
-    if b.control == "player":
-        h+=4
-        continue
+    b_btn1 = create_button(20, GAME_H+(7*20), "Random", (32,32,181),(lambda: setRobotMode(2, "blue", "random")),True)
+    robot_btns.append(b_btn1)
+    b_btn2 = create_button(90, GAME_H+(7*20), "Offense", (32,32,181),(lambda: setRobotMode(2, "blue", "offense")))
+    robot_btns.append(b_btn2)
+    b_btn3 = create_button(160, GAME_H+(7*20), "Defense", (32,32,181),(lambda: setRobotMode(2, "blue", "defense")))
+    robot_btns.append(b_btn3)
 
-    r_btn1 = create_button(320, GAME_H+(h*20), "Random", (181,32,32),(lambda: setRobotMode(r,"random")),True)
-    robot_btns.append(r_btn1)
-    r_btn2 = create_button(390, GAME_H+(h*20), "Offense", (181,32,32),(lambda: setRobotMode(r,"offense")))
-    robot_btns.append(r_btn2)
-    r_btn3 = create_button(460, GAME_H+(h*20), "Defense", (181,32,32),(lambda: setRobotMode(r,"defense")))
-    robot_btns.append(r_btn3)
-    h += 4
-
-    bs.append(r_btn1)
-    bs.append(r_btn2)
-    bs.append(r_btn3)
+    bs.append(b_btn1)
+    bs.append(b_btn2)
+    bs.append(b_btn3)
     btn_sets.append(bs)
 
+if red_robots[0].control != 'player':
+    rs = []
+    r_btn1 = create_button(320, GAME_H+(3*20), "Random", (181,32,32),(lambda: setRobotMode(1, "red", "random")),True)
+    robot_btns.append(r_btn1)
+    r_btn2 = create_button(390, GAME_H+(3*20), "Offense", (181,32,32),(lambda: setRobotMode(1, "red", "offense")))
+    robot_btns.append(r_btn2)
+    r_btn3 = create_button(460, GAME_H+(3*20), "Defense", (181,32,32),(lambda: setRobotMode(1, "red", "defense")))
+    robot_btns.append(r_btn3)
 
+    rs.append(r_btn1)
+    rs.append(r_btn2)
+    rs.append(r_btn3)
+    btn_sets.append(rs)
 
+if red_robots[1].control != 'player':
+    rs = []
+    r_btn1 = create_button(320, GAME_H+(7*20), "Random", (181,32,32),(lambda: setRobotMode(2, "red", "random")),True)
+    robot_btns.append(r_btn1)
+    r_btn2 = create_button(390, GAME_H+(7*20), "Offense", (181,32,32),(lambda: setRobotMode(2, "red", "offense")))
+    robot_btns.append(r_btn2)
+    r_btn3 = create_button(460, GAME_H+(7*20), "Defense", (181,32,32),(lambda: setRobotMode(2, "red", "defense")))
+    robot_btns.append(r_btn3)
 
-#################    RANDOM MAP PLACEMENT   ###################
+    rs.append(r_btn1)
+    rs.append(r_btn2)
+    rs.append(r_btn3)
+    btn_sets.append(rs)
 
-
-
-#pick random empty spot on the map
-def randArenaPos():
-    s = []
-    for r in range(len(m)):
-        for c in range(len(m[0])):
-            if int(m[r][c]) not in [1,2]:
-                s.append([c,r])
-    return random.choice(s)
-
-#choose random starting position location
-def randBasePos():
-    return random.choice([[3,3],[43,3],[43,23],[3,23]])
 
 
 ###################       RENDERS       ###################
@@ -197,17 +205,17 @@ def drawStats():
     # Fill the bottom part of the screen with black
     pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(0,GAME_H,GAME_W,STATS_H))
 
-    font = pygame.font.SysFont(None, 24)        #set font
+    font = pygame.font.SysFont(None, 20)        #set font
 
     h = 1
     for b in blue_robots:
-        bluetxt = font.render('Blue Robot ' + str(h) + ': ' + str((b.x,b.y)) + " @ " + str(b.rot), True, (0,0,255))
+        bluetxt = font.render('Blue ' + str(b.id) + ': ' + str((b.x,b.y)) + " @ " + str(b.rot) + " [" + str(b.hp) + " / " + str(b.maxhp) + "]", True, (0,0,255)) 
         screen.blit(bluetxt, (20, GAME_H+(h*20)))
         h+=4
 
     h = 1
     for r in red_robots:
-        redtext = font.render('Red Robot ' + str(h) + ': ' + str((r.x,r.y)) + " @ " + str(r.rot), True, (255,0,0))
+        redtext = font.render('Red ' + str(r.id) + ': ' + str((r.x,r.y)) + " @ " + str(r.rot) + " [" + str(r.hp) + " / " + str(r.maxhp) + "]", True, (255,0,0))
         screen.blit(redtext, (320, GAME_H+(h*20)))
         h+=4
 
@@ -257,11 +265,6 @@ while running:
             if r.control == "player":
                 r.keypress(pressed_keys)
             elif r.control == "ai":
-                if r.target == None:
-                    #t = randPos()
-                    t = randArenaPos();
-                    r.target = pt(t[0],t[1])
-
                 r.gotoTarget()
                 
 

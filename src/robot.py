@@ -1,5 +1,7 @@
 import numpy as np
 import pygame
+import math
+import random
 
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
@@ -27,6 +29,11 @@ class pt():
 	def __str__(self):
 		return f"({self.x},{self.y})"
 
+	#get distance between this point and another
+	def dist(self,other):
+		return math.sqrt(math.pow(other.x-self.x,2)+math.pow(other.y-self.y,2))
+
+
 #x,y coordinate points with parents (for BFS)
 class node():
 	def __init__(self,pos,parent):
@@ -38,7 +45,7 @@ class node():
 
 
 class Robot(pygame.sprite.Sprite):
-	def __init__(self, x,y, rot, arena, sqr_pix, color,control):
+	def __init__(self, idno, x,y, rot, arena, bases, sqr_pix, color, control):
 		super(Robot, self).__init__()
 		self.px = sqr_pix
 		self.color = color
@@ -52,10 +59,14 @@ class Robot(pygame.sprite.Sprite):
 
 		self.arena = arena
 		self.collisions = [1,2]
+		self.bases = bases			#just use starting position
 
+		self.id = idno
 		self.x = x
 		self.y = y
 		self.rot = 0
+		self.hp = 2000
+		self.maxhp = 2000
 		
 		self.surf = pygame.Surface((self.robotDim.x*sqr_pix, self.robotDim.y*sqr_pix))		#take up 4x4 pixel space
 		self.surf.fill(color)
@@ -178,6 +189,8 @@ class Robot(pygame.sprite.Sprite):
 
 
 
+
+
 	#######  PLAYER CONTROL METHODS   #######
 
 
@@ -280,16 +293,12 @@ class Robot(pygame.sprite.Sprite):
 		return validPts
 
 
-
-	def touchingPt(self,p):
-		return
-
-
-
 	#ai moves to the point based on the path calculated
 	def gotoTarget(self):
-		#if no target, stay idle
+		#if no target, stay create new one based on current mode
 		if self.target == None:
+			self.cancelTarget()
+			self.modeSelect()
 			return
 
 		#if no path set, calculate it, otherwise cancel it
@@ -316,7 +325,7 @@ class Robot(pygame.sprite.Sprite):
 		self.target = None
 
 
-
+	#debug to print the current path
 	def printPath(self):
 		s = ""
 		for p in self.path:
@@ -325,6 +334,54 @@ class Robot(pygame.sprite.Sprite):
 		print(s)
 
 		
-	
+	######   ROBOT MOVEMENT STRATEGIES  ######
+
+	#reset the target based on the mode
+	def modeChange(self, mode):
+		self.mode = mode
+		self.cancelTarget()
+		self.modeSelect()
+
+	#create target position based on robot mode
+	def modeSelect(self):
+		if(self.hp < self.maxhp/4):				#retreat @ quarter hp
+			self.retreat()
+		elif(self.mode == "random"):
+			self.randArenaPos()
+		elif(self.mode == "defensive"):
+			self.defensive()
+		elif(self.mode == "offensive"):
+			self.offensive()
+
+
+	#pick random empty spot on the map
+	def randArenaPos(self):
+		s = []
+		for r in range(len(self.arena)):
+			for c in range(len(self.arena[0])):
+				if int(self.arena[r][c]) not in self.collisions:
+					s.append([c,r])
+
+		#set new target  
+		p = random.choice(s)
+		self.target = pt(p[0],p[1])
+
+	#defensive control - hide from robots
+	def defensive(self):
+		return
+
+	#offensive control - seek out robots
+	def offensive(self):
+		return
+
+	#return to nearest base
+	def retreat(self):
+		#get closest base
+		dists = []
+		for b in self.bases:
+			dists.append(pt(self.x,self.y).dist(b))
+		dists = np.array(dists)
+		self.target = self.bases[np.where(dists == min(dists))[0]]
+
 
 
