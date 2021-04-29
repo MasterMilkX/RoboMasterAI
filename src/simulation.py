@@ -1,5 +1,6 @@
 import csv
 from robot import Robot, pt
+from arena_builder import make_arena_polygon
 
 import random
 import numpy as np
@@ -23,6 +24,9 @@ STATS_H = 200
 screen = pygame.display.set_mode([GAME_W, GAME_H+STATS_H])
 clock = pygame.time.Clock()
 
+#set up boundaries for visilibity
+arena_poly = make_arena_polygon()
+
 #print(GAME_W)
 #print(GAME_H)
 
@@ -39,10 +43,34 @@ from pygame.locals import (
     QUIT,
 )
 
+NUM_ROBOTS = 4
+
 b_robot1 = Robot(1,3,23, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"player")
 b_robot2 = Robot(2,3,3, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"ai")
 r_robot1 = Robot(1,43,3, 0, m, [pt(43,3),pt(43,23)], pixels+1, (255,0,0),"ai")
 r_robot2 = Robot(2,43,23, 0, m, [pt(43,3),pt(43,23)], pixels+1, (255,0,0),"ai")
+
+
+all_robots = []
+red_robots = []
+blue_robots = []
+
+
+all_robots.append(b_robot1)
+blue_robots.append(b_robot1)
+
+if(NUM_ROBOTS >= 2):
+    all_robots.append(r_robot1)
+    red_robots.append(r_robot1)
+if(NUM_ROBOTS >= 3):
+    all_robots.append(b_robot2)
+    blue_robots.append(b_robot2)
+if(NUM_ROBOTS == 4):
+    all_robots.append(r_robot2)
+    red_robots.append(r_robot2)
+
+
+
 
 all_robots = [b_robot1, b_robot2, r_robot1, r_robot2]
 #all_robots = [b_robot1,r_robot1]
@@ -111,11 +139,11 @@ robot_btns = []
 btn_sets = []
 if blue_robots[0].control != "player":
     bs = []
-    b_btn1 = create_button(20, GAME_H+(3*20), "Random", (32,32,181),(lambda: setRobotMode(1, "blue", "random")),True)
+    b_btn1 = create_button(20, GAME_H+(2*20), "Random", (32,32,181),(lambda: setRobotMode(1, "blue", "random")),True)
     robot_btns.append(b_btn1)
-    b_btn2 = create_button(90, GAME_H+(3*20), "Offense", (32,32,181),(lambda: setRobotMode(1, "blue", "offense")))
+    b_btn2 = create_button(90, GAME_H+(2*20), "Offense", (32,32,181),(lambda: setRobotMode(1, "blue", "offense")))
     robot_btns.append(b_btn2)
-    b_btn3 = create_button(160, GAME_H+(3*20), "Defense", (32,32,181),(lambda: setRobotMode(1, "blue", "defense")))
+    b_btn3 = create_button(160, GAME_H+(2*20), "Defense", (32,32,181),(lambda: setRobotMode(1, "blue", "defense")))
     robot_btns.append(b_btn3)
 
     bs.append(b_btn1)
@@ -125,11 +153,11 @@ if blue_robots[0].control != "player":
 
 if blue_robots[1].control != "player":
     bs = []
-    b_btn1 = create_button(20, GAME_H+(7*20), "Random", (32,32,181),(lambda: setRobotMode(2, "blue", "random")),True)
+    b_btn1 = create_button(20, GAME_H+(6*20), "Random", (32,32,181),(lambda: setRobotMode(2, "blue", "random")),True)
     robot_btns.append(b_btn1)
-    b_btn2 = create_button(90, GAME_H+(7*20), "Offense", (32,32,181),(lambda: setRobotMode(2, "blue", "offense")))
+    b_btn2 = create_button(90, GAME_H+(6*20), "Offense", (32,32,181),(lambda: setRobotMode(2, "blue", "offense")))
     robot_btns.append(b_btn2)
-    b_btn3 = create_button(160, GAME_H+(7*20), "Defense", (32,32,181),(lambda: setRobotMode(2, "blue", "defense")))
+    b_btn3 = create_button(160, GAME_H+(6*20), "Defense", (32,32,181),(lambda: setRobotMode(2, "blue", "defense")))
     robot_btns.append(b_btn3)
 
     bs.append(b_btn1)
@@ -139,11 +167,11 @@ if blue_robots[1].control != "player":
 
 if red_robots[0].control != 'player':
     rs = []
-    r_btn1 = create_button(320, GAME_H+(3*20), "Random", (181,32,32),(lambda: setRobotMode(1, "red", "random")),True)
+    r_btn1 = create_button(320, GAME_H+(2*20), "Random", (181,32,32),(lambda: setRobotMode(1, "red", "random")),True)
     robot_btns.append(r_btn1)
-    r_btn2 = create_button(390, GAME_H+(3*20), "Offense", (181,32,32),(lambda: setRobotMode(1, "red", "offense")))
+    r_btn2 = create_button(390, GAME_H+(2*20), "Offense", (181,32,32),(lambda: setRobotMode(1, "red", "offense")))
     robot_btns.append(r_btn2)
-    r_btn3 = create_button(460, GAME_H+(3*20), "Defense", (181,32,32),(lambda: setRobotMode(1, "red", "defense")))
+    r_btn3 = create_button(460, GAME_H+(2*20), "Defense", (181,32,32),(lambda: setRobotMode(1, "red", "defense")))
     robot_btns.append(r_btn3)
 
     rs.append(r_btn1)
@@ -153,11 +181,11 @@ if red_robots[0].control != 'player':
 
 if red_robots[1].control != 'player':
     rs = []
-    r_btn1 = create_button(320, GAME_H+(7*20), "Random", (181,32,32),(lambda: setRobotMode(2, "red", "random")),True)
+    r_btn1 = create_button(320, GAME_H+(6*20), "Random", (181,32,32),(lambda: setRobotMode(2, "red", "random")),True)
     robot_btns.append(r_btn1)
-    r_btn2 = create_button(390, GAME_H+(7*20), "Offense", (181,32,32),(lambda: setRobotMode(2, "red", "offense")))
+    r_btn2 = create_button(390, GAME_H+(6*20), "Offense", (181,32,32),(lambda: setRobotMode(2, "red", "offense")))
     robot_btns.append(r_btn2)
-    r_btn3 = create_button(460, GAME_H+(7*20), "Defense", (181,32,32),(lambda: setRobotMode(2, "red", "defense")))
+    r_btn3 = create_button(460, GAME_H+(6*20), "Defense", (181,32,32),(lambda: setRobotMode(2, "red", "defense")))
     robot_btns.append(r_btn3)
 
     rs.append(r_btn1)
@@ -166,6 +194,20 @@ if red_robots[1].control != 'player':
     btn_sets.append(rs)
 
 
+
+#camera toggle button
+def toggleCams():
+    FONT = pygame.font.Font(None, 15)
+    camTogg['active'] = not camTogg['active']
+    if(camTogg['active']):
+        camTogg['text'] = FONT.render("Camera On", True, (255,255,255))
+    else:
+        camTogg['text'] = FONT.render("Camera Off", True, (0,0,0))
+
+    for r in all_robots:
+        r.showCam = not r.showCam
+
+camTogg = create_button(240,GAME_H+(8*20), "Camera On", (135,37,147), toggleCams,True)
 
 ###################       RENDERS       ###################
 
@@ -177,6 +219,8 @@ def render():
 
     for btn in robot_btns:
         draw_button(btn,screen)
+
+    draw_button(camTogg,screen)
 
     # Flip the display
     pygame.display.flip()
@@ -198,6 +242,26 @@ def drawGame():
     #draw the robots on screen
     for r in all_robots:
         screen.blit(r.surf, (r.x*(pixels+1),r.y*(pixels+1)))
+
+    #draw all the camera viewports of the robots
+    for r in all_robots:
+        if not r.showCam:
+            continue
+
+        pts = []
+        cx = (r.x*(pixels+1) + (r.robotDim.x/2)*(pixels+1))
+        cy = (r.y*(pixels+1) + (r.robotDim.y/2)*(pixels+1))
+
+        for p in range(len(r.camPts)):
+            s = (r.camPts[p][0]+cx,r.camPts[p][1]+cy)
+            e = (r.camPts[0][0]+cx,r.camPts[0][1]+cy)
+            if p < len(r.camPts)-1:
+                e = (r.camPts[p+1][0]+cx,r.camPts[p+1][1]+cy)
+            pygame.draw.line(screen, r.camColor, s,e,1)
+            #pts.append((p[0]+cx,p[1]+cy))
+            
+
+
 
 
 # draw the stats at the bottom of the screen
@@ -250,6 +314,8 @@ while running:
                     if button['rect'].collidepoint(event.pos):
                         button['callback']()
                         resetBtns(button)
+                if camTogg['rect'].collidepoint(event.pos):
+                    camTogg['callback']()
 
     #update ticks
     tick += 1

@@ -3,6 +3,8 @@ import pygame
 import math
 import random
 
+from camera import make_base_cone, make_robot_cone, make_robot_360, i_see_you, you_see_me
+
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
 from pygame.locals import (
@@ -64,7 +66,16 @@ class Robot(pygame.sprite.Sprite):
 		self.id = idno
 		self.x = x
 		self.y = y
+
 		self.rot = 0
+		self.cam_mode = "safe"
+		self.camColor = (255,255,255)
+		self.camera = None
+		self.camPts = []
+		self.showCam = True
+		self.env360 = None
+		self.cameraUpdate()
+
 		self.hp = 2000
 		self.maxhp = 2000
 		
@@ -332,6 +343,32 @@ class Robot(pygame.sprite.Sprite):
 			s += f"{p} "
 		s += f" --> {self.target}"
 		print(s)
+
+
+	#######   ROBOT CAMERA VIEWPOINTS  #######
+
+	#get update on the camera and what it sees
+	def cameraUpdate(self):
+		self.camPts = make_base_cone(self.rot)
+		self.camera = make_robot_cone(self)
+
+	#get an update on the robot in the environment for the visibility
+	def envUpdate(self,env):
+		self.env360 = make_robot_360(self,env)
+
+	#check if other robots may see it
+	def seen_by_other_robot(self,other_robots):
+		for r in other_robots:
+			if you_see_me(r,self.env360):
+				return r
+		return None
+
+	#check if can see another robot
+	def see_other_robot(self,other_robots):
+		for r in other_robots:
+			if i_see_you(r,self.env360,self.camera):
+				return r
+		return None
 
 		
 	######   ROBOT MOVEMENT STRATEGIES  ######
