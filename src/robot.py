@@ -15,6 +15,8 @@ from pygame.locals import (
 	K_ESCAPE,
 	KEYDOWN,
 	QUIT,
+	K_z,
+	K_x
 )
 
 #x, y coordinate points
@@ -146,15 +148,17 @@ class Robot(pygame.sprite.Sprite):
 			pos = pt(self.x,self.y)
 
 		goto = []
+		if(p.y > pos.y):
+			goto.append("down")
+		elif(p.y < pos.y):
+			goto.append("up")
+
 		if(p.x > pos.x):
 			goto.append("right")
 		elif(p.x < pos.x):
 			goto.append("left")
 
-		if(p.y > pos.y):
-			goto.append("down")
-		elif(p.y < pos.y):
-			goto.append("up")
+		
 
 		return goto
 
@@ -215,6 +219,11 @@ class Robot(pygame.sprite.Sprite):
 			self.move("left")
 		if pressed_keys[K_RIGHT]:
 			self.move("right")
+
+		if pressed_keys[K_z]:
+			self.rotateAngle("ccw")
+		elif pressed_keys[K_x]:
+			self.rotateAngle("cw")
 
 	#move 1 tile in a specific direction
 	def move(self,direction):
@@ -325,6 +334,9 @@ class Robot(pygame.sprite.Sprite):
 		for d in nextDir:
 			self.move(d)
 
+		#move camera in direction
+		self.gradRotate(self.dir2Angle("-".join(nextDir)))
+
 		#reach destination
 		if len(self.path) == 0:
 			self.cancelTarget()
@@ -369,6 +381,50 @@ class Robot(pygame.sprite.Sprite):
 			if i_see_you(r,self.env360,self.camera):
 				return r
 		return None
+
+	#convert movement directions to a camera angle
+	def dir2Angle(self,dirs,pos=None):
+		#create position
+		if pos == None:
+			pos = pt(self.x,self.y)
+		pos2 = pt(pos.x,pos.y)
+
+		pos_dirs = {
+			"up" : 0,
+			"down" : 180,
+			"left" : 270,
+			"right" : 90,
+			"up-left" : 315,
+			"down-left" : 225,
+			"up-right" : 45,
+			"down-right" : 135
+		}
+
+		return pos_dirs[dirs]
+
+
+	#gradually rotate current camera angle to specified angle
+	def gradRotate(self, angle):
+		#if the same
+		if angle == self.rot:
+			self.cameraUpdate()
+			return
+
+		d = "ccw" if ((angle-self.rot+360)%360) - 180 > 0 else "cw"
+		self.rotateAngle(d)
+
+	#turn the camera in a direction
+	def rotateAngle(self,compass):
+		if compass == "ccw":
+			self.rot -= 45
+		elif compass == "cw":
+			self.rot += 45
+		self.rot %= 360
+
+		self.cameraUpdate()
+
+
+
 
 		
 	######   ROBOT MOVEMENT STRATEGIES  ######

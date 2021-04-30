@@ -25,7 +25,7 @@ pixels = px*scale     #size of pixels relative to the game arena
 #   'angle': is the direcction of the cone. 0 = ->
 #   'resolution': is the number of degrees one point and the next in the arc.
 def create_cone(robot, radio, angle, opening, resolution=1):
-	
+
 	# Define the list for the points of the cone-shape polygon
 	p=[]
 	
@@ -85,10 +85,10 @@ def base_cone(radio, angle, opening,resolution=1):
 	return p
 
 def make_base_cone(angle):
-	return base_cone(25*pixels,angle,40,20)
+	return base_cone(25*pixels,(angle-90)%360,40,20)
 
 def make_robot_cone(robot):
-	return create_cone(a_point(robot.x,robot.y),25*pixels,robot.rot,40,20)
+	return create_cone(a_point(robot.x,robot.y),25*pixels,(robot.rot-90)%360,40,20)
 
 def make_robot_360(robot,env):
 	return vis.Visibility_Polygon(a_point(robot.x,robot.y), env, epsilon)

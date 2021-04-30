@@ -83,7 +83,7 @@ blue_robots = [b_robot1,b_robot2]
 
 
 
-def create_button(x, y, text, color, callback, active=False):
+def create_button(x, y, text, color, callback, active=False, w=60, h=30):
     """A button is a dictionary that contains the relevant data.
 
     Consists of a rect, text surface and text rect, color and a
@@ -93,7 +93,7 @@ def create_button(x, y, text, color, callback, active=False):
     # text rect, color and the callback function.
     FONT = pygame.font.Font(None, 15)
     text_surf = FONT.render(text, True, (255,255,255))
-    button_rect = pygame.Rect(x, y, 60, 30)
+    button_rect = pygame.Rect(x, y, w, h)
     text_rect = text_surf.get_rect(center=button_rect.center)
     button = {
         'active' : active,
@@ -108,9 +108,6 @@ def create_button(x, y, text, color, callback, active=False):
 #sets the mode of the robot from the button press
 def setRobotMode(rid, color, mode):
     rb = None
-    if rid == 8:
-        print('hmm')
-        return
     if color == "red":
         rb = red_robots[rid-1]
     elif color == "blue":
@@ -137,6 +134,7 @@ def resetBtns(b):
 # make the buttons for the UI
 robot_btns = []
 btn_sets = []
+cam_btns = []
 if blue_robots[0].control != "player":
     bs = []
     b_btn1 = create_button(20, GAME_H+(2*20), "Random", (32,32,181),(lambda: setRobotMode(1, "blue", "random")),True)
@@ -150,6 +148,10 @@ if blue_robots[0].control != "player":
     bs.append(b_btn2)
     bs.append(b_btn3)
     btn_sets.append(bs)
+
+if b_robot1 in blue_robots:
+    cam1 = create_button(100, GAME_H+(4*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(1,"blue")),True, 45, 15)
+    cam_btns.append(cam1)
 
 if blue_robots[1].control != "player":
     bs = []
@@ -165,6 +167,10 @@ if blue_robots[1].control != "player":
     bs.append(b_btn3)
     btn_sets.append(bs)
 
+if b_robot2 in blue_robots:
+    cam2 = create_button(100, GAME_H+(8*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(2,"blue")),True, 45, 15)
+    cam_btns.append(cam2)
+
 if red_robots[0].control != 'player':
     rs = []
     r_btn1 = create_button(320, GAME_H+(2*20), "Random", (181,32,32),(lambda: setRobotMode(1, "red", "random")),True)
@@ -178,6 +184,10 @@ if red_robots[0].control != 'player':
     rs.append(r_btn2)
     rs.append(r_btn3)
     btn_sets.append(rs)
+
+if r_robot1 in red_robots:
+    cam3 = create_button(400, GAME_H+(4*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(1,"red")),True, 45, 15)
+    cam_btns.append(cam3)
 
 if red_robots[1].control != 'player':
     rs = []
@@ -193,21 +203,39 @@ if red_robots[1].control != 'player':
     rs.append(r_btn3)
     btn_sets.append(rs)
 
+if r_robot2 in red_robots:
+    cam4 = create_button(400, GAME_H+(8*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(2,"red")),True, 45, 15)
+    cam_btns.append(cam4)
+
 
 
 #camera toggle button
-def toggleCams():
+def toggleAllCams():
     FONT = pygame.font.Font(None, 15)
     camTogg['active'] = not camTogg['active']
     if(camTogg['active']):
-        camTogg['text'] = FONT.render("Camera On", True, (255,255,255))
+        camTogg['text'] = FONT.render("Show Cams", True, (255,255,255))
     else:
-        camTogg['text'] = FONT.render("Camera Off", True, (0,0,0))
+        camTogg['text'] = FONT.render("Hide Cams", True, (0,0,0))
 
     for r in all_robots:
-        r.showCam = not r.showCam
+        r.showCam = camTogg['active']
 
-camTogg = create_button(240,GAME_H+(8*20), "Camera On", (135,37,147), toggleCams,True)
+#toggle individual robot cams
+def toggleRobotCam(rid, color):
+    rb = None
+    if color == "red":
+        rb = red_robots[rid-1]
+    elif color == "blue":
+        rb = blue_robots[rid-1]
+
+    if rb == None:
+        return
+
+    rb.showCam = not rb.showCam
+
+
+camTogg = create_button(240,GAME_H+(75), "Show Cams", (135,37,147), toggleAllCams,True)
 
 ###################       RENDERS       ###################
 
@@ -220,7 +248,11 @@ def render():
     for btn in robot_btns:
         draw_button(btn,screen)
 
+    for btn in cam_btns:
+        draw_button(btn,screen)
+
     draw_button(camTogg,screen)
+
 
     # Flip the display
     pygame.display.flip()
@@ -314,6 +346,11 @@ while running:
                     if button['rect'].collidepoint(event.pos):
                         button['callback']()
                         resetBtns(button)
+
+                for button in cam_btns:
+                    if button['rect'].collidepoint(event.pos):
+                        button['callback']()
+
                 if camTogg['rect'].collidepoint(event.pos):
                     camTogg['callback']()
 
@@ -323,7 +360,7 @@ while running:
     # Get the set of keys pressed and check for user input
     pressed_keys = pygame.key.get_pressed()
 
-    #perform every tick
+    #perform every 5 ticks
     if tick % (5) == 0:
 
         #move player controlled robots
