@@ -76,6 +76,7 @@ class Robot(pygame.sprite.Sprite):
 		self.camPts = []
 		self.showCam = True
 		self.env360 = None
+		self.robotTarget = None
 		self.cameraUpdate()
 
 		self.hp = 2000
@@ -440,10 +441,10 @@ class Robot(pygame.sprite.Sprite):
 		if(self.hp < self.maxhp/4):				#retreat @ quarter hp
 			self.retreat()
 		elif(self.mode == "random"):
-			self.randArenaPos()
-		elif(self.mode == "defensive"):
+			self.randArenaPosNear()
+		elif(self.mode == "defense"):
 			self.defensive()
-		elif(self.mode == "offensive"):
+		elif(self.mode == "offense"):
 			self.offensive()
 
 
@@ -459,13 +460,66 @@ class Robot(pygame.sprite.Sprite):
 		p = random.choice(s)
 		self.target = pt(p[0],p[1])
 
+	#get random spots nearby
+	def randArenaPosNear(self,rad=20):
+		s = []
+		for r2 in range(-rad,rad+1):
+			for c2 in range(-rad,rad+1):
+				r = self.y+r2
+				c = self.x+c2
+				if self.validPt(c,r) and int(self.arena[r][c]) not in self.collisions:
+					s.append([c,r])
+
+		#set new target  
+		p = random.choice(s)
+		self.target = pt(p[0],p[1])
+
+	def validPt(self,x,y):
+		return x >= 0 and x < len(self.arena[0]) and y >= 0 and y < len(self.arena)
+
+
 	#defensive control - hide from robots
 	def defensive(self):
-		return
+		#find hiding spot
+		if(self.robotTarget != None):
+			print("aaaaggghhh!")
+		#move randomly
+		else:
+			self.randArenaPosNear()
 
 	#offensive control - seek out robots
 	def offensive(self):
-		return
+		#chase after robot
+		if self.robotTarget != None:
+			#print("why are you running?!")
+			self.target = pt(self.robotTarget.x,self.robotTarget.y)
+		#move randomly
+		else:
+			self.randArenaPosNear()
+
+	#find threatening robots in area or on camera
+	def findThreat(self,robots):
+		if(self.mode == "defense"):
+			for r in robots:
+				sight = self.seen_by_other_robot(robots)
+				if sight != None and self.robotTarget != sight:		#found new threat
+					self.robotTarget = sight
+					self.camColor = (0,0,255)
+					self.cancelTarget()
+					return
+		elif(self.mode == "offense"):
+			for r in robots:
+				sight = self.see_other_robot(robots)
+				if sight != None and self.robotTarget != sight:		#found new threat
+					self.robotTarget = sight
+					self.camColor = (255,0,0)
+					self.cancelTarget()
+					return
+
+		self.robotTarget = None
+		self.camColor = (255,255,255)
+
+
 
 	#return to nearest base
 	def retreat(self):

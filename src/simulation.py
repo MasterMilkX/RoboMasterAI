@@ -214,9 +214,9 @@ def toggleAllCams():
     FONT = pygame.font.Font(None, 15)
     camTogg['active'] = not camTogg['active']
     if(camTogg['active']):
-        camTogg['text'] = FONT.render("Show Cams", True, (255,255,255))
+        camTogg['text'] = FONT.render("Hide Cams", True, (255,255,255))
     else:
-        camTogg['text'] = FONT.render("Hide Cams", True, (0,0,0))
+        camTogg['text'] = FONT.render("Show Cams", True, (0,0,0))
 
     for r in all_robots:
         r.showCam = camTogg['active']
@@ -369,7 +369,22 @@ while running:
                 r.keypress(pressed_keys)
             elif r.control == "ai":
                 r.gotoTarget()
-                
+
+            #update location
+            if r.mode != "random":
+                r.envUpdate(arena_poly)
+
+
+    #check cameras for robot detection 
+    if tick % 10 == 0:
+        for r in all_robots:
+            if r.color == "blue":
+                r.findThreat(red_robots)
+            else:
+                r.findThreat(blue_robots)
+
+
+
 
     #draw the screen
     render()
