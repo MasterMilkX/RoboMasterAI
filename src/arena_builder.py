@@ -8,6 +8,9 @@ import matplotlib.pylab as plt
 import math
 
 y_size = 28
+scale = 1
+px = 10
+pixels = scale*px
 
 
 #build the outer boundary of the polygon

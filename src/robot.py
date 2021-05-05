@@ -3,7 +3,7 @@ import pygame
 import math
 import random
 
-from camera import make_base_cone, make_robot_cone, make_robot_360, i_see_you, you_see_me
+from camera import make_base_cone, make_robot_cone, make_robot_360, i_see_you, you_see_me, safe_coordinate
 
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
@@ -481,11 +481,64 @@ class Robot(pygame.sprite.Sprite):
 	#defensive control - hide from robots
 	def defensive(self):
 		#find hiding spot
-		if(self.robotTarget != None):
-			print("aaaaggghhh!")
+		if(self.robotTarget != None and self.target == None):
+			self.findHidingSpot()
 		#move randomly
-		else:
+		elif(self.robotTarget == None):
 			self.randArenaPosNear()
+
+	#look for nearest spot out of reach from enemy robot
+	def findHidingSpot(self):
+		startpos = node(pt(self.x,self.y),None)
+		queue = []
+		visited = []
+
+		path = []
+		dest = None
+
+		queue.append(startpos)
+
+		#breadth first search
+		while len(queue) > 0 and dest == None:
+			#print(len(queue))
+			origin = queue.pop(0)
+			pqueue = list(map(lambda x: x.pos, queue))
+
+			if origin.pos in visited:
+				continue
+
+			visited.append(origin.pos)
+			n = self.getNeighbors(origin.pos)
+
+			#add all valid points to queue if not already in it
+			for p in n:
+				#found destination
+				if safe_coordinate(p.x,p.y,self.robotTarget.env360):
+					path = []
+					path.insert(0,p)
+					dest = origin
+					self.target = p
+					break
+
+				#new point to add to queue of search
+				if p not in visited and p not in pqueue:
+					newpt = node(p,origin)
+					queue.append(newpt)
+					
+
+		if dest == None:
+			print(f"No hiding spot available!")
+			return 0
+
+		#find path back to current position
+		while dest.parent != None:
+			path.insert(0,dest.pos)
+			dest = dest.parent
+
+		self.path = path
+
+		return 1
+
 
 	#offensive control - seek out robots
 	def offensive(self):

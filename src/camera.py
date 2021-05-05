@@ -88,7 +88,7 @@ def make_base_cone(angle):
 	return base_cone(15*pixels,(angle-90)%360,40,15)
 
 def make_robot_cone(robot):
-	return create_cone(a_point(robot.x,robot.y),15*pixels,(robot.rot-90)%360,40,15)
+	return create_cone(a_point(robot.x,robot.y),15,(robot.rot-90)%360,40,15)
 
 def make_robot_360(robot,env):
 	return vis.Visibility_Polygon(a_point(robot.x,robot.y), env, epsilon)
@@ -105,4 +105,14 @@ def you_see_me(enemy, vision360):
 	enemypt = a_point(enemy.x,enemy.y)
 	if enemypt._in(vision360, epsilon):
 		return True
+
+#check if a point is found in a robot 360 view
+def safe_coordinate(x,y, robot360): #xe, ye enemy posititon in arena format
+    coordenate = a_point(x, y)
+    if robot360 == None:
+    	return False
+    	
+    if coordenate._in(robot360, epsilon):
+        return False
+    return True
 	

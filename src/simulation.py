@@ -371,8 +371,7 @@ while running:
                 r.gotoTarget()
 
             #update location
-            if r.mode != "random":
-                r.envUpdate(arena_poly)
+            r.envUpdate(arena_poly)
 
 
     #check cameras for robot detection 
