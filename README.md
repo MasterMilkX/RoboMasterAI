@@ -2,6 +2,7 @@
 #### M Charity and Catalina Jaramillo
 Computational Geometry 2021 project implementing the art gallery guard algorithm for RoboMasterAI Competition 
 
+![screenshot](imgs/game_2p.png)
 
 ## Background
 ---
@@ -22,6 +23,8 @@ Some tasks required for the competition that are implemented in this demo includ
 3. Calculate the shortest path to a point where the enemy is visible
 4. Calculate offensive positioning to find line-of-sight search for the opposing teams' robots
 5. Calculate defensive positioning to avoid the line-of-sight of the opposing teams' robots
+
+![arena](arena_layout_big.png)
 
 ### Project Deliverables
 
