@@ -76,6 +76,7 @@ class Robot(pygame.sprite.Sprite):
 		self.camPts = []
 		self.showCam = True
 		self.env360 = None
+		self.showEnv360 = False
 		self.robotTarget = None
 		self.cameraUpdate()
 

@@ -129,6 +129,7 @@ def resetBtns(b):
 robot_btns = []
 btn_sets = []
 cam_btns = []
+env360_btns = []
 if blue_robots[0].control != "player":
     bs = []
     b_btn1 = create_button(20, GAME_H+(2*20), "Random", (32,32,181),(lambda: setRobotMode(1, "blue", "random")),True)
@@ -144,8 +145,10 @@ if blue_robots[0].control != "player":
     btn_sets.append(bs)
 
 if b_robot1 in blue_robots:
-    cam1 = create_button(100, GAME_H+(4*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(1,"blue")),True, 45, 15)
+    cam1 = create_button(70, GAME_H+(4*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(1,"blue")),True, 45, 15)
     cam_btns.append(cam1)
+    env1 = create_button(130, GAME_H+(4*20), 'Env 360', (78,171,67), (lambda: toggleRobotEnv(1,"blue")),True, 45, 15)
+    env360_btns.append(env1)
 
 if NUM_ROBOTS >= 3 and blue_robots[1].control != "player":
     bs = []
@@ -162,8 +165,10 @@ if NUM_ROBOTS >= 3 and blue_robots[1].control != "player":
     btn_sets.append(bs)
 
 if b_robot2 in blue_robots:
-    cam2 = create_button(100, GAME_H+(8*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(2,"blue")),True, 45, 15)
+    cam2 = create_button(70, GAME_H+(8*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(2,"blue")),True, 45, 15)
     cam_btns.append(cam2)
+    env2 = create_button(130, GAME_H+(8*20), 'Env 360', (78,171,67), (lambda: toggleRobotEnv(2,"blue")),True, 45, 15)
+    env360_btns.append(env2)
 
 if red_robots[0].control != 'player':
     rs = []
@@ -180,8 +185,10 @@ if red_robots[0].control != 'player':
     btn_sets.append(rs)
 
 if r_robot1 in red_robots:
-    cam3 = create_button(400, GAME_H+(4*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(1,"red")),True, 45, 15)
+    cam3 = create_button(370, GAME_H+(4*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(1,"red")),True, 45, 15)
     cam_btns.append(cam3)
+    env3 = create_button(430, GAME_H+(4*20), 'Env 360', (78,171,67), (lambda: toggleRobotEnv(1,"red")),True, 45, 15)
+    env360_btns.append(env3)
 
 if NUM_ROBOTS >= 4 and red_robots[1].control != 'player':
     rs = []
@@ -198,8 +205,10 @@ if NUM_ROBOTS >= 4 and red_robots[1].control != 'player':
     btn_sets.append(rs)
 
 if r_robot2 in red_robots:
-    cam4 = create_button(400, GAME_H+(8*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(2,"red")),True, 45, 15)
+    cam4 = create_button(370, GAME_H+(8*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(2,"red")),True, 45, 15)
     cam_btns.append(cam4)
+    env4 = create_button(430, GAME_H+(4*20), 'Env 360', (78,171,67), (lambda: toggleRobotEnv(2,"red")),True, 45, 15)
+    env360_btns.append(env4)
 
 
 
@@ -228,8 +237,34 @@ def toggleRobotCam(rid, color):
 
     rb.showCam = not rb.showCam
 
+#environment 360 toggle button
+def toggle360():
+    FONT = pygame.font.Font(None, 15)
+    env360Togg['active'] = not env360Togg['active']
+    if(env360Togg['active']):
+        env360Togg['text'] = FONT.render("Hide 360", True, (255,255,255))
+    else:
+        env360Togg['text'] = FONT.render("Show 360", True, (0,0,0))
+
+    for r in all_robots:
+        r.showEnv360 = env360Togg['active']
+
+#toggle individual robot cams
+def toggleRobotEnv(rid, color):
+    rb = None
+    if color == "red":
+        rb = red_robots[rid-1]
+    elif color == "blue":
+        rb = blue_robots[rid-1]
+
+    if rb == None:
+        return
+
+    rb.showEnv360 = not rb.showEnv360
+
 
 camTogg = create_button(240,GAME_H+(75), "Show Cams", (135,37,147), toggleAllCams,True)
+env360Togg = create_button(240,GAME_H+(115), "Show 360", (32,171,15), toggle360,True)
 
 ###################       RENDERS       ###################
 
@@ -245,7 +280,11 @@ def render():
     for btn in cam_btns:
         draw_button(btn,screen)
 
+    for btn in env360_btns:
+        draw_button(btn,screen)
+
     draw_button(camTogg,screen)
+    draw_button(env360Togg,screen)
 
 
     # Flip the display
@@ -285,37 +324,20 @@ def drawGame():
                 e = (r.camPts[p+1][0]+cx,r.camPts[p+1][1]+cy)
             pygame.draw.line(screen, r.camColor, s,e,1)
             #pts.append((p[0]+cx,p[1]+cy))
-            
-    
-    #draw the 360 polygon for player
-    '''
-    for r in blue_robots:
+      
+    for r in all_robots:
         pts = []
-        if r.env360 == None:
+        if (not r.showEnv360 or r.env360 == None):
             continue
-
         
         for p in range(r.env360.n()):
             s = (r.env360[p].x()*(pixels+1),r.env360[p].y()*(pixels+1))
             e = (r.env360[0].x()*(pixels+1),r.env360[0].y()*(pixels+1))
             if p < r.env360.n()-1:
                 e = (r.env360[p+1].x()*(pixels+1),r.env360[p+1].y()*(pixels+1))
-            pygame.draw.line(screen, (0,255,0), s,e,1)
-    '''
-    '''
-    for r in red_robots:
-        pts = []
-        if r.env360 == None:
-            continue
+            pygame.draw.line(screen, r.color, s,e,1)
 
-        
-        for p in range(r.env360.n()):
-            s = (r.env360[p].x()*(pixels+1),r.env360[p].y()*(pixels+1))
-            e = (r.env360[0].x()*(pixels+1),r.env360[0].y()*(pixels+1))
-            if p < r.env360.n()-1:
-                e = (r.env360[p+1].x()*(pixels+1),r.env360[p+1].y()*(pixels+1))
-            pygame.draw.line(screen, (0,255,0), s,e,1)
-    '''
+
     #print(dir(arena_poly))
     #draw arena
     '''
@@ -388,8 +410,15 @@ while running:
                     if button['rect'].collidepoint(event.pos):
                         button['callback']()
 
+                for button in env360_btns:
+                    if button['rect'].collidepoint(event.pos):
+                        button['callback']()
+
                 if camTogg['rect'].collidepoint(event.pos):
                     camTogg['callback']()
+
+                if env360Togg['rect'].collidepoint(event.pos):
+                    env360Togg['callback']()
 
     #update ticks
     tick += 1
