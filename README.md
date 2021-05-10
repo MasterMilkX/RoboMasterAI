@@ -16,6 +16,7 @@ The art gallery problem is a computational geometry visibility problem that aims
 
 ### Project Description
 We built a simulation environment that reflects the arena and the movements of the robots in it. The environment can handle between 2-4 robots with 1 or more of the robots being AI controlled or and a single robot being player controlled.
+![arena](imgs/arena_layout_big.png)
 
 Some tasks required for the competition that are implemented in this demo include:
 1. Simulate the game arena and layout to be interpreted by an artificially intelligent program capable of making decisions without human input.
@@ -25,8 +26,6 @@ Some tasks required for the competition that are implemented in this demo includ
 ![offense](imgs/offense.png)
 5. Calculate defensive positioning to avoid the line-of-sight of the opposing teams' robots
 ![defense](imgs/defense.png)
-
-![arena](imgs/arena_layout_big.png)
 
 ### Project Deliverables
 
@@ -60,10 +59,10 @@ AI Robot behaviors can be changed by clicking between the following
 Toggle individual onscreen camera visibilities by clicking the 'Camera' button under each robot or by clicking 'Show/Hide Camera' for all robots. 
 
 ### Files
-**(Simulation.py)[src/simulation.py]** - contains the main game loop, ui, and robot behavior updates
-**(Robot.py)[src/robot.py]** - contains all of the behavior definitions, properties, and visibility update functions for the robots in the game
-**(Camera.py)[src/camera.py]** - defines the polygon creation for the camera visibility cone and 360 visibility mapping for the robots
-**(Arena_builder.py)[src/arena_builder.py]** - manually creates the RoboMaster AI Challenge arena asdefined in the user manual as an interpretable polygon. Scaled down for simulation usage.
+* **[Simulation.py](src/simulation.py)** - contains the main game loop, ui, and robot behavior updates
+* **[Robot.py](src/robot.py)** - contains all of the behavior definitions, properties, and visibility update functions for the robots in the game
+* **[Camera.py](src/camera.py)** - defines the polygon creation for the camera visibility cone and 360 visibility mapping for the robots
+* **[Arena_builder.py(src/arena_builder.py)** - manually creates the RoboMaster AI Challenge arena asdefined in the user manual as an interpretable polygon. Scaled down for simulation usage.
 
 ### Simulation Limitations
 * *Pathfinding delay* - The simulation code and the robot pathfinding algorithms are run in the same file. The BFS pathfinding is executed everytime a robot reaches its destination and will occassionally pause the entire simulation in order to calculate the path to the next point. To minimize this time delay, a random point within 20 cells is calculated for the next destination instead of anywhere on the map
