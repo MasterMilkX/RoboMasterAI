@@ -43,7 +43,7 @@ from pygame.locals import (
     QUIT,
 )
 
-NUM_ROBOTS = 4
+NUM_ROBOTS = 2
 
 b_robot1 = Robot(1,3,23, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"player")
 b_robot2 = Robot(2,3,3, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"ai")
@@ -70,12 +70,6 @@ if(NUM_ROBOTS == 4):
     red_robots.append(r_robot2)
 
 
-
-
-all_robots = [b_robot1, b_robot2, r_robot1, r_robot2]
-#all_robots = [b_robot1,r_robot1]
-red_robots = [r_robot1,r_robot2]
-blue_robots = [b_robot1,b_robot2]
 
 
 
@@ -153,7 +147,7 @@ if b_robot1 in blue_robots:
     cam1 = create_button(100, GAME_H+(4*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(1,"blue")),True, 45, 15)
     cam_btns.append(cam1)
 
-if blue_robots[1].control != "player":
+if NUM_ROBOTS >= 3 and blue_robots[1].control != "player":
     bs = []
     b_btn1 = create_button(20, GAME_H+(6*20), "Random", (32,32,181),(lambda: setRobotMode(2, "blue", "random")),True)
     robot_btns.append(b_btn1)
@@ -189,7 +183,7 @@ if r_robot1 in red_robots:
     cam3 = create_button(400, GAME_H+(4*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(1,"red")),True, 45, 15)
     cam_btns.append(cam3)
 
-if red_robots[1].control != 'player':
+if NUM_ROBOTS >= 4 and red_robots[1].control != 'player':
     rs = []
     r_btn1 = create_button(320, GAME_H+(6*20), "Random", (181,32,32),(lambda: setRobotMode(2, "red", "random")),True)
     robot_btns.append(r_btn1)
@@ -292,6 +286,19 @@ def drawGame():
             pygame.draw.line(screen, r.camColor, s,e,1)
             #pts.append((p[0]+cx,p[1]+cy))
             
+    #draw all the 360 polygons
+    for r in blue_robots:
+        pts = []
+        if r.env360 == None:
+            continue
+
+        
+        for p in range(r.env360.n()):
+            s = (r.env360[p].x()*(pixels+1),r.env360[p].y()*(pixels+1))
+            e = (r.env360[0].x()*(pixels+1),r.env360[0].y()*(pixels+1))
+            if p < r.env360.n()-1:
+                e = (r.env360[p+1].x()*(pixels+1),r.env360[p+1].y()*(pixels+1))
+            pygame.draw.line(screen, (0,255,0), s,e,1)
 
 
 
@@ -375,7 +382,8 @@ while running:
 
 
     #check cameras for robot detection 
-    if tick % 10 == 0:
+    if tick % 20 == 0:
+        print("! ROBOT UPDATE !")
         for r in all_robots:
             if r.color == "blue":
                 r.findThreat(red_robots)

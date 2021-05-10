@@ -7,6 +7,7 @@ import matplotlib.pylab as plt
 # Used in the create_cone function
 import math
 
+ym = 28
 y_size = 28
 scale = 1
 px = 10
@@ -59,14 +60,14 @@ def a_point(x,y): #input arena coordinates
 def make_arena_polygon():
     #build center diamond polygon
     #list points cw
-    p1 =vis.Point(24, 16)
-    p2 =vis.Point(23, 15)
-    p3 =vis.Point(23, 14)
-    p4 =vis.Point(24, 13)
-    p5 =vis.Point(25, 13)
-    p6 =vis.Point(26, 14)
-    p7 =vis.Point(26, 15)
-    p8 =vis.Point(25, 16)
+    p1 =vis.Point(24, ym-16)
+    p2 =vis.Point(23, ym-15)
+    p3 =vis.Point(23, ym-14)
+    p4 =vis.Point(24, ym-13)
+    p5 =vis.Point(25, ym-13)
+    p6 =vis.Point(26, ym-14)
+    p7 =vis.Point(26, ym-15)
+    p8 =vis.Point(25, ym-16)
 
 
     # Load the values of the hole polygon in order to draw it later
@@ -77,17 +78,17 @@ def make_arena_polygon():
     diam = vis.Polygon([p2, p3, p4, p5, p6, p7, p8, p1])
 
     #build the arena
-    wall_x, wall_y, walls = outer(1,28,1,48)  #y_up, y_down, x_left, x_right, use arena format
+    wall_x, wall_y, walls = outer(ym-1,ym-28,1,48)  #y_up, y_down, x_left, x_right, use arena format
 
 
-    huecos_input = [[ 8,  8.1,  2,  7],  #format y_up, y_down, x_left, x_right, use arena format
-                    [14,   15, 11, 14],
-                    [22,   27, 10, 11],
-                    [ 7,    8, 22, 27],
-                    [21,   22, 22, 27],
-                    [14,   15, 35, 38],
-                    [21, 21.1, 42, 47],
-                    [ 2,    7, 38, 39],
+    huecos_input = [[ ym-8,  ym-8.1,  2,  7],  #format y_up, y_down, x_left, x_right, use arena format
+                    [ym-14,   ym-15, 11, 14],
+                    [ym-22,   ym-27, 10, 11],
+                    [ ym-7,    ym-8, 22, 27],
+                    [ym-21,   ym-22, 22, 27],
+                    [ym-14,   ym-15, 35, 38],
+                    [ym-21, ym-21.1, 42, 47],
+                    [ ym-2,    ym-7, 38, 39],
                    ]
     huecos = []
     for item in huecos_input:

@@ -84,14 +84,20 @@ def base_cone(radio, angle, opening,resolution=1):
 
 	return p
 
+#make a simple cone (for use with the ui)
 def make_base_cone(angle):
 	return base_cone(15*pixels,(angle-90)%360,40,15)
 
+#make a cone (for use with the robot - relative to its position)
 def make_robot_cone(robot):
 	return create_cone(a_point(robot.x,robot.y),15,(robot.rot-90)%360,40,15)
 
+#make a polygon based on the 360 visibility of the map
 def make_robot_360(robot,env):
-	return vis.Visibility_Polygon(a_point(robot.x,robot.y), env, epsilon)
+	rp = a_point(robot.x,28-robot.y)
+	rp.snap_to_boundary_of(env, epsilon)
+	rp.snap_to_vertices_of(env, epsilon)
+	return vis.Visibility_Polygon(rp, env, epsilon)
 
 
 #robot can see another robot with its camera/cone

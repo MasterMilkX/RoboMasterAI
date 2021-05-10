@@ -512,8 +512,8 @@ class Robot(pygame.sprite.Sprite):
 
 			#add all valid points to queue if not already in it
 			for p in n:
-				#found destination
-				if safe_coordinate(p.x,p.y,self.robotTarget.env360):
+				#found destination (at least 10 moves away)
+				if p.dist(pt(self.x,self.y)) >= 10 and safe_coordinate(p.x,p.y,self.robotTarget.env360):
 					path = []
 					path.insert(0,p)
 					dest = origin
@@ -536,6 +536,7 @@ class Robot(pygame.sprite.Sprite):
 			dest = dest.parent
 
 		self.path = path
+		print(f'{self.x},{self.y} -> {self.target}')
 
 		return 1
 
@@ -556,6 +557,9 @@ class Robot(pygame.sprite.Sprite):
 			for r in robots:
 				sight = self.seen_by_other_robot(robots)
 				if sight != None and self.robotTarget != sight:		#found new threat
+					color = "Blue" if self.color == (0,0,255) else "Red"
+					other_color = "Red" if color == "Blue" else "Blue"
+					print(f'{color} {self.id}: threat found! [{other_color} {sight.id}]')
 					self.robotTarget = sight
 					self.camColor = (0,0,255)
 					self.cancelTarget()
@@ -564,6 +568,9 @@ class Robot(pygame.sprite.Sprite):
 			for r in robots:
 				sight = self.see_other_robot(robots)
 				if sight != None and self.robotTarget != sight:		#found new threat
+					color = "Blue" if self.color == (0,0,255) else "Red"
+					other_color = "Red" if color == "Blue" else "Blue"
+					print(f'{color} {self.id}: target acquired! [{other_color} {sight.id}]')
 					self.robotTarget = sight
 					self.camColor = (255,0,0)
 					self.cancelTarget()
