@@ -38,10 +38,10 @@ All of these programs will be written in the Python language using the [PyGame](
 
 ## Code
 ---
-### Requirements
+### Requirements (can be installed with `pip install -m requirements.txt`)
 * Python 3+
 * PyGame
-* Visilibity
+* Visilibity (and possibly [swig](https://github.com/swig/swig/wiki/Getting-Started))
 * Numpy
 
 ### Running simulation

@@ -1,0 +1,4 @@
+pygame==1.9.4.dev0
+matplotlib==3.3.0
+VisiLibity==1.0.10
+numpy==1.18.5
