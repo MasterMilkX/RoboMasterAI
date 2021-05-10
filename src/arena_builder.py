@@ -9,9 +9,6 @@ import math
 
 ym = 28
 y_size = 28
-scale = 1
-px = 10
-pixels = scale*px
 
 
 #build the outer boundary of the polygon
@@ -60,12 +57,12 @@ def a_point(x,y): #input arena coordinates
 def make_arena_polygon():
     #build center diamond polygon
     #list points cw
-    p1 =vis.Point(24, ym-16)
-    p2 =vis.Point(23, ym-15)
-    p3 =vis.Point(23, ym-14)
-    p4 =vis.Point(24, ym-13)
-    p5 =vis.Point(25, ym-13)
-    p6 =vis.Point(26, ym-14)
+    p1 =vis.Point(23, ym-16)
+    p2 =vis.Point(22, ym-15)
+    p3 =vis.Point(22, ym-13)
+    p4 =vis.Point(23, ym-12)
+    p5 =vis.Point(25, ym-12)
+    p6 =vis.Point(26, ym-13)
     p7 =vis.Point(26, ym-15)
     p8 =vis.Point(25, ym-16)
 
@@ -78,17 +75,18 @@ def make_arena_polygon():
     diam = vis.Polygon([p2, p3, p4, p5, p6, p7, p8, p1])
 
     #build the arena
-    wall_x, wall_y, walls = outer(ym-1,ym-28,1,48)  #y_up, y_down, x_left, x_right, use arena format
+    wall_x, wall_y, walls = outer(28,2,1,47)  #y_up, y_down, x_left, x_right, use arena format
 
 
-    huecos_input = [[ ym-8,  ym-8.1,  2,  7],  #format y_up, y_down, x_left, x_right, use arena format
-                    [ym-14,   ym-15, 11, 14],
-                    [ym-22,   ym-27, 10, 11],
-                    [ ym-7,    ym-8, 22, 27],
-                    [ym-21,   ym-22, 22, 27],
-                    [ym-14,   ym-15, 35, 38],
-                    [ym-21, ym-21.1, 42, 47],
-                    [ ym-2,    ym-7, 38, 39],
+    #format y_up, y_down, x_left, x_right, use arena format
+    huecos_input = [[ ym-6,  ym-7,  1,  7],     #
+                    [ym-12,   ym-14, 10, 14],   #
+                    [ym-20,   ym-26, 9, 11],    #
+                    [ ym-5,    ym-7, 21, 27],   #
+                    [ym-19,   ym-21, 21, 27],  #
+                    [ym-12,   ym-14, 34, 38], 
+                    [ym-19, ym-20, 41, 47],  #
+                    [ ym,    ym-6, 37, 39],  #
                    ]
     huecos = []
     for item in huecos_input:
@@ -110,4 +108,4 @@ def make_arena_polygon():
                            diam])
 
 
-    return arena_poly
+    return arena_poly, [[wall_x,wall_y],[huecos[0][0], huecos[0][1]],[huecos[1][0], huecos[1][1]],[huecos[2][0], huecos[2][1]],[huecos[3][0], huecos[3][1]],[huecos[4][0], huecos[4][1]],[huecos[5][0], huecos[5][1]],[huecos[6][0], huecos[6][1]],[huecos[7][0], huecos[7][1]],[diam_x, diam_y]]

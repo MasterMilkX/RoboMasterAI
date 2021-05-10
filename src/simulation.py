@@ -25,7 +25,7 @@ screen = pygame.display.set_mode([GAME_W, GAME_H+STATS_H])
 clock = pygame.time.Clock()
 
 #set up boundaries for visilibity
-arena_poly = make_arena_polygon()
+arena_poly, arena_poly_pts = make_arena_polygon()
 
 #print(GAME_W)
 #print(GAME_H)
@@ -286,7 +286,9 @@ def drawGame():
             pygame.draw.line(screen, r.camColor, s,e,1)
             #pts.append((p[0]+cx,p[1]+cy))
             
-    #draw all the 360 polygons
+    
+    #draw the 360 polygon for player
+    '''
     for r in blue_robots:
         pts = []
         if r.env360 == None:
@@ -299,8 +301,36 @@ def drawGame():
             if p < r.env360.n()-1:
                 e = (r.env360[p+1].x()*(pixels+1),r.env360[p+1].y()*(pixels+1))
             pygame.draw.line(screen, (0,255,0), s,e,1)
+    '''
+    '''
+    for r in red_robots:
+        pts = []
+        if r.env360 == None:
+            continue
 
-
+        
+        for p in range(r.env360.n()):
+            s = (r.env360[p].x()*(pixels+1),r.env360[p].y()*(pixels+1))
+            e = (r.env360[0].x()*(pixels+1),r.env360[0].y()*(pixels+1))
+            if p < r.env360.n()-1:
+                e = (r.env360[p+1].x()*(pixels+1),r.env360[p+1].y()*(pixels+1))
+            pygame.draw.line(screen, (0,255,0), s,e,1)
+    '''
+    #print(dir(arena_poly))
+    #draw arena
+    '''
+    for s in arena_poly_pts:
+        ml = len(s[0])
+        sz = list(zip(s[0],s[1]))
+        for z in range(len(sz)):
+            x = sz[z][0]
+            y = sz[z][1]
+            s = (sz[z][0]*(pixels+1),sz[z][1]*(pixels+1))
+            e = (sz[0][0]*(pixels+1),sz[0][1]*(pixels+1))
+            if z < (len(sz)-1):
+                e = (sz[z+1][0]*(pixels+1),sz[z+1][1]*(pixels+1))
+            pygame.draw.line(screen, (0,255,0), s,e,1)
+    '''
 
 
 # draw the stats at the bottom of the screen
@@ -383,7 +413,8 @@ while running:
 
     #check cameras for robot detection 
     if tick % 20 == 0:
-        print("! ROBOT UPDATE !")
+        #print("! ROBOT UPDATE !")
+        print("!", end=" ", flush=True)
         for r in all_robots:
             if r.color == "blue":
                 r.findThreat(red_robots)
