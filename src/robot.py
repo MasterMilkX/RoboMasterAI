@@ -560,7 +560,7 @@ class Robot(pygame.sprite.Sprite):
 				if sight != None and self.robotTarget != sight:		#found new threat
 					color = "Blue" if self.color == (0,0,255) else "Red"
 					other_color = "Red" if color == "Blue" else "Blue"
-					print(f'\n{color} {self.id}: threat found! [{other_color} {sight.id}]')
+					print(f'\n{color} {self.id}: threat found! [{other_color} {sight.id} @ ({sight.x},{sight.y})]')
 					self.robotTarget = sight
 					self.camColor = (0,0,255)
 					self.cancelTarget()
@@ -571,7 +571,7 @@ class Robot(pygame.sprite.Sprite):
 				if sight != None and self.robotTarget != sight:		#found new threat
 					color = "Blue" if self.color == (0,0,255) else "Red"
 					other_color = "Red" if color == "Blue" else "Blue"
-					print(f'\n{color} {self.id}: target acquired! [{other_color} {sight.id}]')
+					print(f'\n{color} {self.id}: target acquired! [{other_color} {sight.id} @ ({sight.x},{sight.y})]')
 					self.robotTarget = sight
 					self.camColor = (255,0,0)
 					self.cancelTarget()

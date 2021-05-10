@@ -75,7 +75,7 @@ def make_arena_polygon():
     diam = vis.Polygon([p2, p3, p4, p5, p6, p7, p8, p1])
 
     #build the arena
-    wall_x, wall_y, walls = outer(28,2,1,47)  #y_up, y_down, x_left, x_right, use arena format
+    wall_x, wall_y, walls = outer(2,28,1,47)  #y_up, y_down, x_left, x_right, use arena format
 
 
     #format y_up, y_down, x_left, x_right, use arena format
