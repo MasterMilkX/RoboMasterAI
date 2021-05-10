@@ -43,7 +43,7 @@ from pygame.locals import (
     QUIT,
 )
 
-NUM_ROBOTS = 2
+NUM_ROBOTS = 4
 
 b_robot1 = Robot(1,3,23, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"player")
 b_robot2 = Robot(2,3,3, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"ai")
