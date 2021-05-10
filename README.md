@@ -16,6 +16,7 @@ The art gallery problem is a computational geometry visibility problem that aims
 
 ### Project Description
 We built a simulation environment that reflects the arena and the movements of the robots in it. The environment can handle between 2-4 robots with 1 or more of the robots being AI controlled or and a single robot being player controlled.
+
 ![arena](imgs/arena_layout_big.png)
 
 Some tasks required for the competition that are implemented in this demo include:
@@ -62,7 +63,7 @@ Toggle individual onscreen camera visibilities by clicking the 'Camera' button u
 * **[Simulation.py](src/simulation.py)** - contains the main game loop, ui, and robot behavior updates
 * **[Robot.py](src/robot.py)** - contains all of the behavior definitions, properties, and visibility update functions for the robots in the game
 * **[Camera.py](src/camera.py)** - defines the polygon creation for the camera visibility cone and 360 visibility mapping for the robots
-* **[Arena_builder.py(src/arena_builder.py)** - manually creates the RoboMaster AI Challenge arena asdefined in the user manual as an interpretable polygon. Scaled down for simulation usage.
+* **[Arena_builder.py](src/arena_builder.py)** - manually creates the RoboMaster AI Challenge arena asdefined in the user manual as an interpretable polygon. Scaled down for simulation usage.
 
 ### Simulation Limitations
 * *Pathfinding delay* - The simulation code and the robot pathfinding algorithms are run in the same file. The BFS pathfinding is executed everytime a robot reaches its destination and will occassionally pause the entire simulation in order to calculate the path to the next point. To minimize this time delay, a random point within 20 cells is calculated for the next destination instead of anywhere on the map
