@@ -287,7 +287,7 @@ class Robot(pygame.sprite.Sprite):
 					
 
 		if dest == None:
-			print(f"No path found to {self.target} = ({self.arena[self.target.y][self.target.x]})")
+			print(f"\nNo path found to {self.target} = ({self.arena[self.target.y][self.target.x]})")
 			return 0
 
 		#find path back to current position
@@ -352,7 +352,7 @@ class Robot(pygame.sprite.Sprite):
 
 	#debug to print the current path
 	def printPath(self):
-		s = ""
+		s = "\n"
 		for p in self.path:
 			s += f"{p} "
 		s += f" --> {self.target}"
@@ -528,7 +528,7 @@ class Robot(pygame.sprite.Sprite):
 					
 
 		if dest == None:
-			print(f"No hiding spot available!")
+			print(f"\nNo hiding spot available!")
 			return 0
 
 		#find path back to current position
@@ -537,7 +537,7 @@ class Robot(pygame.sprite.Sprite):
 			dest = dest.parent
 
 		self.path = path
-		print(f'{self.x},{self.y} -> {self.target}')
+		print(f'\n{self.x},{self.y} -> {self.target}')
 
 		return 1
 
@@ -560,7 +560,7 @@ class Robot(pygame.sprite.Sprite):
 				if sight != None and self.robotTarget != sight:		#found new threat
 					color = "Blue" if self.color == (0,0,255) else "Red"
 					other_color = "Red" if color == "Blue" else "Blue"
-					print(f'{color} {self.id}: threat found! [{other_color} {sight.id}]')
+					print(f'\n{color} {self.id}: threat found! [{other_color} {sight.id}]')
 					self.robotTarget = sight
 					self.camColor = (0,0,255)
 					self.cancelTarget()
@@ -571,7 +571,7 @@ class Robot(pygame.sprite.Sprite):
 				if sight != None and self.robotTarget != sight:		#found new threat
 					color = "Blue" if self.color == (0,0,255) else "Red"
 					other_color = "Red" if color == "Blue" else "Blue"
-					print(f'{color} {self.id}: target acquired! [{other_color} {sight.id}]')
+					print(f'\n{color} {self.id}: target acquired! [{other_color} {sight.id}]')
 					self.robotTarget = sight
 					self.camColor = (255,0,0)
 					self.cancelTarget()

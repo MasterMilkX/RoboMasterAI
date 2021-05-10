@@ -43,7 +43,7 @@ from pygame.locals import (
     QUIT,
 )
 
-NUM_ROBOTS = 2
+NUM_ROBOTS = 4
 
 b_robot1 = Robot(1,3,23, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"player")
 b_robot2 = Robot(2,3,3, 0, m, [pt(3,3),pt(3,23)], pixels+1, (0,0,255),"ai")
@@ -207,7 +207,7 @@ if NUM_ROBOTS >= 4 and red_robots[1].control != 'player':
 if r_robot2 in red_robots:
     cam4 = create_button(370, GAME_H+(8*20), 'Camera', (180,122,191), (lambda: toggleRobotCam(2,"red")),True, 45, 15)
     cam_btns.append(cam4)
-    env4 = create_button(430, GAME_H+(4*20), 'Env 360', (78,171,67), (lambda: toggleRobotEnv(2,"red")),True, 45, 15)
+    env4 = create_button(430, GAME_H+(8*20), 'Env 360', (78,171,67), (lambda: toggleRobotEnv(2,"red")),True, 45, 15)
     env360_btns.append(env4)
 
 
@@ -397,6 +397,7 @@ while running:
     # Did the user click the window close button?
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            print("\n")
             running = False
         # on click function for buttons
         elif event.type == pygame.MOUSEBUTTONDOWN:
