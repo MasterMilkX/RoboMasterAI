@@ -22,9 +22,11 @@ Some tasks required for the competition that are implemented in this demo includ
 2. Identify the position of enemies.
 3. Calculate the shortest path to a point where the enemy is visible
 4. Calculate offensive positioning to find line-of-sight search for the opposing teams' robots
+![offense](imgs/offense.png)
 5. Calculate defensive positioning to avoid the line-of-sight of the opposing teams' robots
+![defense](imgs/defense.png)
 
-![arena](arena_layout_big.png)
+![arena](imgs/arena_layout_big.png)
 
 ### Project Deliverables
 
@@ -68,3 +70,7 @@ Toggle individual onscreen camera visibilities by clicking the 'Camera' button u
 * *360 visibility* - In order to reduce the simulation delay from calculating the polygon that needs to be created to account for the change of position in the robot, the 360 visibility of each robot is only calculated every 4th step (20 ticks) in game. As such, there may appear to be some delay in the robot behaviors if set to offense or defense (i.e. a robot right in front of another robot may not be immediately detected)
 * *Arena Scaling* - The dimensionality of the actual arena from the RoboMasterAI Challenge was vastly reduced to simplify the geometric calculations done by the robots as well as reduce the BFS pathfinding searches. This also helped with 2d grid mapping for PyGame. As such, this simulation is an extremely simplified version of the actual arena.
 * *Robot collisions* - There is no check for if a robot collides with another robot, however, there is arena collision checking
+
+![cam](imgs/cam_only.png)
+![4p](imgs/4p.png)
+
