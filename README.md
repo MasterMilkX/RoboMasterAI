@@ -8,11 +8,11 @@ Computational Geometry 2021 project implementing the art gallery guard algorithm
 ---
 
 ### Purpose
-RoboMaster University AI Challenge[1](https://www.robomaster.com/en-US/robo/icra) is a competition that offers students the opportunity to develop capabilities in the robotics field. The competition consists of a autonomous robot shooting confrontation and requires tasks like motion planning and control, computer vision, etc.
+RoboMaster University AI Challenge[1](https://www.robomaster.com/en-US/robo/icra) is a competition that offers students the opportunity to develop capabilities in the robotics field. The competition consists of an autonomous robot shooting confrontation and requires tasks like motion planning and control, computer vision, etc.
 NYU has a team preparing to participate in the competition, and we will be providing them with some tools for the battle. [3](https://wp.nyu.edu/nyurm/the-competition/)
 
 ### Art Gallery Problem
-The art gallery problem is a computational geometry visibility problem that aims find the smallest number of guards possible to cover an "art gallery" polygon with n vertices. [2](https://math.mit.edu/~apost/courses/18.204_2018/Nicole_Chesnokov_paper.pdf) We will be demonstrating an example of the art gallery problem in a dynamically changing situation (where the robots are constantly changing position) for the RoboMaster AI challenge. The robots (the guards) will locate itself on the arena (the art gallery) as well as other robots (art thiefs). 
+The art gallery problem is a computational geometry visibility problem that aims to find the smallest number of guards possible to cover an "art gallery" polygon with n vertices. [2](https://math.mit.edu/~apost/courses/18.204_2018/Nicole_Chesnokov_paper.pdf) We will be demonstrating an example of the art gallery problem in a dynamically changing situation (where the robots are constantly changing position) for the RoboMaster AI challenge. The robots (the guards) will locate themselves on the arena (the art gallery) as well as other robots (art thiefs). 
 
 ### Project Description
 We built a simulation environment that reflects the arena and the movements of the robots in it. The environment can handle between 2-4 robots with 1 or more of the robots being AI controlled or and a single robot being player controlled.
@@ -25,12 +25,17 @@ Some tasks required for the competition that are implemented in this demo includ
 3. Calculate the shortest path to a point where the enemy is visible
 4. Calculate offensive positioning to find line-of-sight search for the opposing teams' robots
 ![offense](imgs/offense.png)
+
+For an enemy to be within sight of the robot, it has to be in both the camera cone of the robot and the 360˚ visibility polygon given by the position of the robot in the arena; is such case, the robot could also be seen by the enemy, based on the direction where its camera cone is headed. In case the robot is in the 360˚ visibility polygon but not in the camera cone, the robot wont see the enemy but, again, the enemy may see the robot, depending on the camera direction. In any case where the enemy is out of the robot's 360˚ visibility polygon, it will be out of robot's sight (independent of the camera direction).
+
 5. Calculate defensive positioning to avoid the line-of-sight of the opposing teams' robots
 ![defense](imgs/defense.png)
 
+For the offensive strategy, the enemy's 360˚ visibility polygon comes into play. Using Breadth-first search (BFS), the robot will look for the closest location in the arena that is out of the enemy's 360˚ visibility polygon and move towards such point.
+
 ### Project Deliverables
 
-All of these programs will be written in the Python language using the [PyGame](https://www.pygame.org/docs/) and [Visilibity](https://karlobermeyer.github.io/VisiLibity1/) libraries. The result will be a program with an interactive user-interface that will allow automated actions as well as direct user input to control the simulated robots in the game.  
+All of these programs will be written in the Python language using the [PyGame](https://www.pygame.org/docs/) and [VisiLibity](https://karlobermeyer.github.io/VisiLibity1/) libraries. The result will be a program with an interactive user-interface that will allow automated actions as well as direct user input to control the simulated robots in the game.  
 
 * A simulated environment of the arena defined in the competition manual
 * A path-finding algorithm
@@ -41,7 +46,7 @@ All of these programs will be written in the Python language using the [PyGame](
 ### Requirements (can be installed with `pip install -m requirements.txt`)
 * Python 3+
 * PyGame
-* Visilibity (and possibly [swig](https://github.com/swig/swig/wiki/Getting-Started))
+* VisiLibity (and possibly [swig](https://github.com/swig/swig/wiki/Getting-Started))
 * Numpy
 
 ### Running simulation
