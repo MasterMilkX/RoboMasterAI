@@ -79,3 +79,4 @@ Toggle individual onscreen camera visibilities by clicking the 'Camera' button u
 ![cam](imgs/cam_only.png)
 ![4p](imgs/4p.png)
 
+Thanks to Tony Yu Cao for his tutorial visilibity_test.py on using VisiLibity library
