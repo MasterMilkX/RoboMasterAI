@@ -442,7 +442,7 @@ while running:
 
 
     #check cameras for robot detection 
-    if tick % 20 == 0:
+    if tick % 5 == 0:
         #print("! ROBOT UPDATE !")
         print("!", end=" ", flush=True)
         for r in all_robots:

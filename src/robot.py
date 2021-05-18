@@ -554,28 +554,30 @@ class Robot(pygame.sprite.Sprite):
 
 	#find threatening robots in area or on camera
 	def findThreat(self,robots):
+		if(self.robotTarget != None and len(self.path) > 0):
+			print(f'\npath length: {len(self.path)}')
+			return
+
 		if(self.mode == "defense"):
-			for r in robots:
-				sight = self.seen_by_other_robot(robots)
-				if sight != None and self.robotTarget != sight:		#found new threat
-					color = "Blue" if self.color == (0,0,255) else "Red"
-					other_color = "Red" if color == "Blue" else "Blue"
-					print(f'\n{color} {self.id}: threat found! [{other_color} {sight.id} @ ({sight.x},{sight.y})]')
-					self.robotTarget = sight
-					self.camColor = (0,0,255)
-					self.cancelTarget()
-					return
+			sight = self.seen_by_other_robot(robots)
+			if sight != None and self.robotTarget != sight:		#found new threat
+				color = "Blue" if self.color == (0,0,255) else "Red"
+				other_color = "Red" if color == "Blue" else "Blue"
+				print(f'\n{color} {self.id}: threat found! [{other_color} {sight.id} @ ({sight.x},{sight.y})]')
+				self.robotTarget = sight
+				self.camColor = (0,0,255)
+				self.cancelTarget()
+				return
 		elif(self.mode == "offense"):
-			for r in robots:
-				sight = self.see_other_robot(robots)
-				if sight != None and self.robotTarget != sight:		#found new threat
-					color = "Blue" if self.color == (0,0,255) else "Red"
-					other_color = "Red" if color == "Blue" else "Blue"
-					print(f'\n{color} {self.id}: target acquired! [{other_color} {sight.id} @ ({sight.x},{sight.y})]')
-					self.robotTarget = sight
-					self.camColor = (255,0,0)
-					self.cancelTarget()
-					return
+			sight = self.see_other_robot(robots)
+			if sight != None and self.robotTarget != sight:		#found new threat
+				color = "Blue" if self.color == (0,0,255) else "Red"
+				other_color = "Red" if color == "Blue" else "Blue"
+				print(f'\n{color} {self.id}: target acquired! [{other_color} {sight.id} @ ({sight.x},{sight.y})]')
+				self.robotTarget = sight
+				self.camColor = (255,0,0)
+				self.cancelTarget()
+				return
 
 		self.robotTarget = None
 		self.camColor = (255,255,255)

@@ -71,12 +71,14 @@ Toggle individual onscreen camera visibilities by clicking the 'Camera' button u
 * **[Arena_builder.py](src/arena_builder.py)** - manually creates the RoboMaster AI Challenge arena asdefined in the user manual as an interpretable polygon. Scaled down for simulation usage.
 
 ### Simulation Limitations
-* *Pathfinding delay* - The simulation code and the robot pathfinding algorithms are run in the same file. The BFS pathfinding is executed everytime a robot reaches its destination and will occassionally pause the entire simulation in order to calculate the path to the next point. To minimize this time delay, a random point within 20 cells is calculated for the next destination instead of anywhere on the map
-* *360 visibility* - In order to reduce the simulation delay from calculating the polygon that needs to be created to account for the change of position in the robot, the 360 visibility of each robot is only calculated every 4th step (20 ticks) in game. As such, there may appear to be some delay in the robot behaviors if set to offense or defense (i.e. a robot right in front of another robot may not be immediately detected)
+* *Pathfinding delay and limitation* - The simulation code and the robot pathfinding algorithms are run in the same file. The BFS pathfinding is executed everytime a robot reaches its destination and will occassionally pause the entire simulation in order to calculate the path to the next point. To minimize this time delay, a random point within 20 cells is calculated for the next destination instead of anywhere on the map
 * *Arena Scaling* - The dimensionality of the actual arena from the RoboMasterAI Challenge was vastly reduced to simplify the geometric calculations done by the robots as well as reduce the BFS pathfinding searches. This also helped with 2d grid mapping for PyGame. As such, this simulation is an extremely simplified version of the actual arena.
 * *Robot collisions* - There is no check for if a robot collides with another robot, however, there is arena collision checking
 
 ![cam](imgs/cam_only.png)
 ![4p](imgs/4p.png)
 
+
+#### Acknowledgements
 Thanks to Tony Yu Cao for his tutorial visilibity_test.py on using VisiLibity library
+Except as described above, all the work on this project is our own. Catalina Jaramillo and M Charity.
