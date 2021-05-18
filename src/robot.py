@@ -373,7 +373,7 @@ class Robot(pygame.sprite.Sprite):
 	#check if other robots may see it
 	def seen_by_other_robot(self,other_robots):
 		for r in other_robots:
-			if you_see_me(r,self.env360):
+			if you_see_me(self,r.env360):
 				return r
 		return None
 
@@ -555,7 +555,7 @@ class Robot(pygame.sprite.Sprite):
 	#find threatening robots in area or on camera
 	def findThreat(self,robots):
 		if(self.robotTarget != None and len(self.path) > 0):
-			print(f'\npath length: {len(self.path)}')
+			#print(f'\npath length: {len(self.path)}')
 			return
 
 		if(self.mode == "defense"):
